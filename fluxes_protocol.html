@@ -608,6 +608,19 @@ measurements TERRA project 2024</h1>
 <ul>
 <li>make sure the licor and your clock/phone are precisely synchronized
 and at the right time (also check the time zone of the licor)</li>
+<li>when turning up the Li-7810, it needs some minutes to warm up</li>
+</ul>
+<h2 id="connecting-the-chamber">Connecting the chamber</h2>
+<ul>
+<li>inlet at the top of the chamber, outlet at the bottom</li>
+<li>inlet and outlet as far as possible from each other</li>
+<li>setup the thermocouple inside the chamber</li>
+</ul>
+<h2 id="connecting-the-lid">Connecting the lid</h2>
+<ul>
+<li>connect the tubes to the chamber tubes</li>
+<li>push the thermocouple inside</li>
+<li>make sure everything is air tight with the patafix</li>
 </ul>
 <h2 id="chamber-measurements">Chamber measurements</h2>
 <ul>
@@ -637,14 +650,35 @@ measurement was started, the plot ID, the type (NEE or ER) and the setup
 by the gas analyzer we do not need to precise what we are doing
 when</li>
 </ul>
+<h2 id="extracting-data-from-campbell-logger-par-and-temperature-sensors">Extracting
+data from Campbell logger (PAR and temperature sensors)</h2>
+<ul>
+<li>Connect field computer to wifi CO2CHAMBER</li>
+<li>Open loggernet</li>
+<li>Click “connect”</li>
+<li>select station “CO2CHAMBER_ WiFi”</li>
+<li>select Table1 in the rolling menu</li>
+<li>Click connect (top left)</li>
+<li>Check the station time stamp</li>
+<li>Click custom</li>
+<li>select Table1</li>
+<li>set File mode to “append to End of File”</li>
+<li>set File format to TOACI1</li>
+<li>Click “Start collection”</li>
+</ul>
+<h2 id="extracting-data-from-the-li-7810">Extracting data from the
+Li-7810</h2>
+<ul>
+<li>connect to the wifi TG10-01782, password is licorenv</li>
+<li>in a browser go to <a href="http://tg10-01782.local">http://tg10-01782.local</a></li>
+<li>click on the setting button, and then the downloading one</li>
+<li>specify start and end datetime, click export</li>
+</ul>
 <h2 id="backup-of-data">Backup of data</h2>
 <ul>
-<li>backup the data after each day of measurement</li>
-<li>make a new file everytime</li>
-<li>use the last file of the campaign (week? TBD) for data
-processing</li>
-<li>in case there is something weird in that last file, you can check
-the previous ones to see if it is better (corrupt/lost data)</li>
+<li>backup the data after each day of measurement
+<!-- - in case there is something weird in that last file, you can check the previous ones to see if it is better (corrupt/lost data)  -->
+</li>
 <li>raw data used for processing should be stored on a cloud (OSF; <a href="https://osf.io/rba87/">https://osf.io/rba87/</a>)</li>
 </ul>
 <h2 id="processing-of-data">Processing of data</h2>

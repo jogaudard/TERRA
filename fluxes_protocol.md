@@ -6,6 +6,19 @@ Joseph Gaudard
 
 - make sure the licor and your clock/phone are precisely synchronized
   and at the right time (also check the time zone of the licor)
+- when turning up the Li-7810, it needs some minutes to warm up
+
+## Connecting the chamber
+
+- inlet at the top of the chamber, outlet at the bottom
+- inlet and outlet as far as possible from each other
+- setup the thermocouple inside the chamber
+
+## Connecting the lid
+
+- connect the tubes to the chamber tubes
+- push the thermocouple inside
+- make sure everything is air tight with the patafix
 
 ## Chamber measurements
 
@@ -34,13 +47,32 @@ Joseph Gaudard
 - since CH<sub>4</sub> and CO<sub>2</sub> are measured simultaneously by
   the gas analyzer we do not need to precise what we are doing when
 
+## Extracting data from Campbell logger (PAR and temperature sensors)
+
+- Connect field computer to wifi CO2CHAMBER
+- Open loggernet
+- Click “connect”
+- select station “CO2CHAMBER\_ WiFi”
+- select Table1 in the rolling menu
+- Click connect (top left)
+- Check the station time stamp
+- Click custom
+- select Table1
+- set File mode to “append to End of File”
+- set File format to TOACI1
+- Click “Start collection”
+
+## Extracting data from the Li-7810
+
+- connect to the wifi TG10-01782, password is licorenv
+- in a browser go to <http://tg10-01782.local>
+- click on the setting button, and then the downloading one
+- specify start and end datetime, click export
+
 ## Backup of data
 
 - backup the data after each day of measurement
-- make a new file everytime
-- use the last file of the campaign (week? TBD) for data processing
-- in case there is something weird in that last file, you can check the
-  previous ones to see if it is better (corrupt/lost data)
+  <!-- - in case there is something weird in that last file, you can check the previous ones to see if it is better (corrupt/lost data)  -->
 - raw data used for processing should be stored on a cloud (OSF;
   <https://osf.io/rba87/>)
 
