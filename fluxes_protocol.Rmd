@@ -68,11 +68,18 @@ output: github_document
 - click on the setting button, and then the downloading one
 - specify start and end datetime, click export
 
+## Naming convention
+
+Data from Campbell logger: PAR_TEMP_yyyy-mm-dd 
+
+Data from Li-7810: CO2_CH4_yyyy-mm-dd
+
 ## Backup of data
 
 - backup the data after each day of measurement 
 <!-- - in case there is something weird in that last file, you can check the previous ones to see if it is better (corrupt/lost data)  -->
 - raw data used for processing should be stored on a cloud (OSF; https://osf.io/rba87/)
+- take a picture of handwritten notes at the end of everyday
 
 ## Processing of data
 
