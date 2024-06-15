@@ -45,6 +45,11 @@ output: github_document
 - make sure to have a field record sheet stating the time at which the measurement was started, the plot ID, the type (NEE or ER) and the setup (lid or chamber)
 - since CH~4~ and CO~2~ are measured simultaneously by the gas analyzer we do not need to precise what we are doing when
 
+## Soil moisture
+
+- take three measurements on the edge of the plots (east, north, west, in that order)
+
+
 ## Extracting data from Campbell logger (PAR and temperature sensors)
 
 - Connect field computer to wifi CO2CHAMBER
