@@ -63,7 +63,7 @@ Joseph Gaudard
 - Check the station time stamp
 - Click custom
 - select Table1
-- set File mode to “append to End of File”
+- set File mode to “make new file”
 - set File format to TOACI1
 - Click “Start collection”
 
