@@ -17,3 +17,17 @@ import_CO2_CH4 <- function(file
 
     
 }
+
+
+import_PAR_temp <- function(file
+){
+    df <-read_delim(file, delim = ",", skip = 1) |>
+    rename(
+        datetime = TMSTAMP
+    ) |>
+    select(datetime, PAR_in_chamber, PAR_out, T_in_chamber, T_out)
+
+    print(head(df))
+
+    df
+}

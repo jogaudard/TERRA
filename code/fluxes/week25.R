@@ -63,8 +63,59 @@ head(CO2_CH4_1)
 # I wrote a function for that, no way I am copy pasting those lines everytime
 
 CO2_CH4_2 <- import_CO2_CH4("raw_data/week25/CO2_CH4_2024-06-18.data")
+CO2_CH4_3 <- import_CO2_CH4("raw_data/week25/CO2_CH4_2024-06-19.data")
+
+# let's put everything together
+
+CO2_CH4 <- full_join(CO2_CH4_1, CO2_CH4_2) |>
+                full_join(CO2_CH4_3)
+
+str(CO2_CH4) # just checking
+
+# now we need to import the data from the PAR_temp logger
+
+PAR_temp_1 <- read_delim("raw_data/week25/PAR_Temp_2024-06-17.dat", delim = ",", skip = 1) |>
+    rename(
+        datetime = TMSTAMP
+    ) |>
+    select(datetime, PAR_in_chamber, PAR_out, T_in_chamber, T_out)
+
+head(PAR_temp_1)
+
+# again, a function
+
+PAR_temp_2 <- import_PAR_temp("raw_data/week25/PAR_Temp_2024-06-18.dat")
+PAR_temp_3 <- import_PAR_temp("raw_data/week25/PAR_Temp_2024-06-19.dat")
+
+PAR_temp <- full_join(PAR_temp_1, PAR_temp_2) |>
+                    full_join(PAR_temp_3)
+
+str(PAR_temp)
+
+fieldnotes <- read_csv("raw_data/Fieldnotes.csv") |>
+    mutate(
+        datetime_start = ymd_hms(paste(DATE, START_TIME))
+    )
+
+head(fieldnotes)
 
 # merge data from both loggers?
+# yes
+
+conc_df <- left_join(CO2_CH4, PAR_temp)
+
+str(conc_df)
+
+# just some graph to check that the data are complete
+
+conc_df |>
+    select(!remark) |>
+        pivot_longer(cols = c(CH4, CO2, PAR_in_chamber, PAR_out, T_in_chamber, T_out), names_to = "measurement") |>
+            ggplot(aes(datetime, value)) +
+            geom_point() +
+            facet_grid(measurement~., scales = "free") +
+            scale_x_datetime(date_breaks = "5 hour", minor_breaks = "1 hour")
+
 
 # use fluxible to calculate fluxes
 
