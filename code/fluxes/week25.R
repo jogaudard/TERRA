@@ -127,9 +127,9 @@ conc_df |>
 
 # here you need to think if we need to cut the measurements, or if there was a time mismatch at some point
 
-conc_co2_25 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start")
+conc_co2_25 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180)
 
-conc_ch4_25 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start")
+conc_ch4_25 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180)
 
 
 # fux_fitting to fit a model to the concentration over time and calculate a slope
@@ -149,7 +149,104 @@ flux_plot(slopes_ch4_25, fit_type = "exp", f_plotname = "week25_ch4", f_ylim_low
 
 
 # flux_calc to calculate the fluxes
+flux_co2_25_chamber <- slopes_co2_25 |>
+    filter(TYPE != "C") |>
+        flux_calc(
+            slope_col = "f_slope_corr",
+            chamber_volume = 6.283, #need to check and add tube volumes
+            plot_area = 0.314,
+            temp_air_col = "T_in_chamber",
+            cols_ave = c("PAR_in_chamber", "PAR_out", "T_out"),
+            cols_keep = c("remark", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
+        ) |>
+        mutate(
+            chamber = case_when(
+                TYPE == "L" ~ "transparent_chamber",
+                TYPE == "D" ~ "dark_chamber"
+            ),
+            gas = "CO2"
+        )
 
+flux_ch4_25_chamber <- slopes_ch4_25 |>
+    filter(TYPE != "C") |>
+    mutate(
+        slope_ppm = f_slope_corr * 001 # we need to feed ppm to the function
+    ) |>
+        flux_calc(
+            slope_col = "slope_ppm",
+            chamber_volume = 6.283, #need to check and add tube volumes
+            plot_area = 0.314,
+            temp_air_col = "T_in_chamber",
+            cols_ave = c("PAR_in_chamber", "PAR_out", "T_out"),
+            cols_keep = c("remark", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
+        ) |>
+        mutate(
+            chamber = case_when(
+                TYPE == "L" ~ "transparent_chamber",
+                TYPE == "D" ~ "dark_chamber"
+            ),
+            gas = "CH4"
+        )
+
+        flux_co2_25_tube <- slopes_co2_25 |>
+    filter(TYPE == "C") |>
+        flux_calc(
+            slope_col = "f_slope_corr",
+            chamber_volume = 1.178, #need to check and add tube volumes
+            plot_area = 0.078,
+            temp_air_col = "T_in_chamber",
+            cols_ave = c("PAR_in_chamber", "PAR_out", "T_out"),
+            cols_keep = c("remark", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
+        ) |>
+        mutate(
+            chamber = "dark_tube",
+            gas = "CO2"
+        )
+
+flux_ch4_25_tube <- slopes_ch4_25 |>
+    filter(TYPE == "C") |>
+    mutate(
+        slope_ppm = f_slope_corr * 001 # we need to feed ppm to the function
+    ) |>
+        flux_calc(
+            slope_col = "slope_ppm",
+            chamber_volume = 1.178, #need to check and add tube volumes
+            plot_area = 0.078,
+            temp_air_col = "T_in_chamber",
+            cols_ave = c("PAR_in_chamber", "PAR_out", "T_out"),
+            cols_keep = c("remark", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
+        ) |>
+        mutate(
+            chamber = "dark_tube",
+            gas = "CH4"
+        )
+        
+
+# we regroup everything
+
+fluxes_25 <- full_join(flux_ch4_25_chamber, flux_co2_25_chamber) |>
+                full_join(flux_ch4_25_tube) |>
+                full_join(flux_co2_25_tube)
+
+
+# let's make a plot
+fluxes_25  |>
+    group_by(PLOT_ID, SITE, gas, chamber) |>
+    summarise(
+        flux_ave = mean(flux),
+        sd_flux = sd(flux)
+    ) |>
+    mutate(
+        lower = flux_ave - sd_flux,
+        upper = flux_ave + sd_flux
+    ) |>
+    ggplot() +
+    # geom_point(aes(PLOT_ID, flux_ave, color = SITE)) +
+    geom_col(aes(PLOT_ID, flux_ave, fill = SITE), position = "dodge") +
+    geom_errorbar(aes(x = PLOT_ID, ymin = lower, ymax = upper, color = SITE), position = "dodge") +
+    facet_grid(gas ~ chamber, scale = "free")
+
+# this is a very ugly plot, it should be improved (color blind palette and co)
 
 # once the clean dataset is there, do not forget to upload it in the clean_data folder on OSF
 # (we avoid doing this automatically because we do not want to take the risk to overwrite the data on OSF in case we messed up something)
