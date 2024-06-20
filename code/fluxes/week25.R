@@ -4,6 +4,7 @@
 library(tidyverse)
 library(dataDownloader)
 library(lubridate)
+library(fluxible)
 
 source("code/fluxes/fun.R")
 
@@ -117,15 +118,34 @@ conc_df |>
             scale_x_datetime(date_breaks = "5 hour", minor_breaks = "1 hour")
 
 
+
 # use fluxible to calculate fluxes
 
 # use flux_match to match the field record and the concentration data
 
+# we should make two separate files for CO2 and CH4
+
+# here you need to think if we need to cut the measurements, or if there was a time mismatch at some point
+
+conc_co2_25 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start")
+
+conc_ch4_25 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start")
+
 
 # fux_fitting to fit a model to the concentration over time and calculate a slope
 
+slopes_co2_25 <- flux_fitting(conc_co2_25, fit_type = "exp")
+str(slopes_co2_25)
+slopes_ch4_25 <- flux_fitting(conc_ch4_25, fit_type = "exp")
 
 # flux_quality and flux_plot to check the quality and see if we need to modify anything
+
+slopes_co2_25 <- flux_quality(slopes_co2_25, fit_type = "exp", slope_col = "f_slope_tz")
+
+slopes_ch4_25 <- flux_quality(slopes_ch4_25, fit_type = "exp", slope_col = "f_slope_tz", ambient_conc = 2000)
+
+flux_plot(slopes_co2_25, fit_type = "exp", f_plotname = "week25_co2", f_ylim_upper = 600)
+flux_plot(slopes_ch4_25, fit_type = "exp", f_plotname = "week25_ch4", f_ylim_lower = 1995, f_ylim_upper = 2005, y_text_position = 2000)
 
 
 # flux_calc to calculate the fluxes
