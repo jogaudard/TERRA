@@ -54,10 +54,9 @@ CO2_CH4_1 <- read_delim("raw_data/week25/CO2_CH4_2024-06-17.data", delim = "\t",
     TIME = hms(TIME),
     CO2 = as.double(CO2),
     CH4 = as.double(CH4),
-    datetime = ymd_hms(paste(DATE, TIME)),
-    remark = REMARK
+    datetime = ymd_hms(paste(DATE, TIME))
   ) |>
-  select(datetime, remark, CH4, CO2)
+  select(datetime, CH4, CO2) # I am removing the remark column. Since it was not always sync with the measurement it is annoying in the rest
 
 head(CO2_CH4_1)
 
@@ -168,7 +167,7 @@ flux_co2_25_chamber <- slopes_co2_25 |>
     plot_area = 0.314,
     temp_air_col = "T_in_chamber",
     cols_ave = c("PAR_in_chamber", "PAR_out", "T_out"),
-    cols_keep = c("remark", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
+    cols_keep = c("START_TIME", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
   ) |>
   mutate(
     chamber = case_when(
@@ -189,7 +188,7 @@ flux_ch4_25_chamber <- slopes_ch4_25 |>
     plot_area = 0.314,
     temp_air_col = "T_in_chamber",
     cols_ave = c("PAR_in_chamber", "PAR_out", "T_out"),
-    cols_keep = c("remark", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
+    cols_keep = c("START_TIME", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
   ) |>
   mutate(
     chamber = case_when(
@@ -207,7 +206,7 @@ flux_co2_25_tube <- slopes_co2_25 |>
     plot_area = 0.078,
     temp_air_col = "T_in_chamber",
     cols_ave = c("PAR_in_chamber", "PAR_out", "T_out"),
-    cols_keep = c("remark", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
+    cols_keep = c("START_TIME", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
   ) |>
   mutate(
     chamber = "dark_tube",
@@ -225,7 +224,7 @@ flux_ch4_25_tube <- slopes_ch4_25 |>
     plot_area = 0.078,
     temp_air_col = "T_in_chamber",
     cols_ave = c("PAR_in_chamber", "PAR_out", "T_out"),
-    cols_keep = c("remark", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
+    cols_keep = c("START_TIME", "SITE", "BLOCK", "PLOT_ID", "WARMING", "GRUBBING", "RAIN", "TYPE")
   ) |>
   mutate(
     chamber = "dark_tube",
@@ -280,3 +279,35 @@ fluxes_CH4 <- fluxes_25 |>
 write_csv(fluxes_CH4, "clean_data/fluxes_CH4.csv")
 
 # need to upload to OSF: 1 file for CO2, 1 for CH4, continuous adding (function for that?)
+
+# from week 27
+
+# download the previous fluxes files from OSF
+
+get_file(node = "rba87",
+         file = "fluxes_CO2.csv",
+         path = "clean_data",
+         remote_path = "ecosystem_fluxes")
+
+get_file(node = "rba87",
+         file = "fluxes_CH4.csv",
+         path = "clean_data",
+         remote_path = "ecosystem_fluxes")
+
+# read them
+
+fluxes_CO2_previous <- read_csv("clean_data/fluxes_CO2.csv", col_types = "f")
+
+
+# full join with the one that was just produced
+# this does not work and needs to be fixed!
+
+fluxes_CO2_to_upload <- bind_rows(fluxes_CO2, fluxes_CO2_previous) |>
+    distinct() |>
+    arrange(f_fluxID)
+
+str(fluxes_CO2)
+str(fluxes_CO2_previous)
+str(fluxes_CO2_to_upload)
+view(fluxes_CO2_to_upload)
+
