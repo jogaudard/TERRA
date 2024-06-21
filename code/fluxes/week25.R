@@ -261,3 +261,22 @@ fluxes_25  |>
 
 # once the clean dataset is there, do not forget to upload it in the clean_data folder on OSF
 # (we avoid doing this automatically because we do not want to take the risk to overwrite the data on OSF in case we messed up something)
+
+fluxes_CO2 <- fluxes_25 |>
+    filter(
+        gas == "CO2"
+    )
+
+write_csv(fluxes_CO2, "clean_data/fluxes_CO2.csv")
+
+fluxes_CH4 <- fluxes_25 |>
+    filter(
+        gas == "CH4"
+    ) |>
+    mutate(
+        flux = flux * 1000 # converting to micromol
+    )
+
+write_csv(fluxes_CH4, "clean_data/fluxes_CH4.csv")
+
+# need to upload to OSF: 1 file for CO2, 1 for CH4, continuous adding (function for that?)
