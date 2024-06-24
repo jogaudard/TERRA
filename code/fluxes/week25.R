@@ -130,7 +130,21 @@ conc_co2_25 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "da
 
 conc_ch4_25 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180)
 
+conc_co2_25 <- conc_co2_25 |>
+  mutate(
+    PAR_in_chamber = case_when(
+      TYPE == "C" ~ NA_real_, # the PAR sensor was still inside the transparent chamber while we were doing the measurements with the cap
+      TYPE != "C" ~ PAR_in_chamber
+    )
+  )
 
+conc_ch4_25 <- conc_ch4_25 |>
+  mutate(
+    PAR_in_chamber = case_when(
+      TYPE == "C" ~ NA_real_, # the PAR sensor was still inside the transparent chamber while we were doing the measurements with the cap
+      TYPE != "C" ~ PAR_in_chamber
+    )
+  )
 # fux_fitting to fit a model to the concentration over time and calculate a slope
 
 slopes_co2_25 <- flux_fitting(conc_co2_25, fit_type = "exp", start_cut = 20)
@@ -286,46 +300,53 @@ fluxes_CH4 <- fluxes_25 |>
 
 # need to upload to OSF: 1 file for CO2, 1 for CH4, continuous adding (function for that?)
 
+# only for week 25
+
+write_csv(fluxes_CO2, "clean_data/fluxes_CO2.csv")
+
+write_csv(fluxes_CH4, "clean_data/fluxes_CH4.csv")
+
+
 # from week 27
 
 # download the previous fluxes files from OSF
 
-get_file(node = "rba87",
-         file = "fluxes_CO2.csv",
-         path = "clean_data",
-         remote_path = "ecosystem_fluxes")
+# get_file(node = "rba87",
+#          file = "fluxes_CO2.csv",
+#          path = "clean_data",
+#          remote_path = "ecosystem_fluxes")
 
-get_file(node = "rba87",
-         file = "fluxes_CH4.csv",
-         path = "clean_data",
-         remote_path = "ecosystem_fluxes")
+# get_file(node = "rba87",
+#          file = "fluxes_CH4.csv",
+#          path = "clean_data",
+#          remote_path = "ecosystem_fluxes")
 
-# read them
+# # read them
 
-fluxes_CO2_previous <- read_csv("clean_data/fluxes_CO2.csv", col_types = "dddTcccccccdddcc")
+# fluxes_CO2_previous <- read_csv("clean_data/fluxes_CO2.csv", col_types = "dddTcccccccdddcc")
 
-fluxes_CH4_previous <- read_csv("clean_data/fluxes_CH4.csv", col_types = "dddTcccccccdddcc") 
-
-
+# fluxes_CH4_previous <- read_csv("clean_data/fluxes_CH4.csv", col_types = "dddTcccccccdddcc") 
 
 
-# full join with the one that was just produced
-# we add a distinct as a safety in case this is run several times (no duplicate of data)
-
-fluxes_CO2_to_upload <- bind_rows(fluxes_CO2, fluxes_CO2_previous) |>
-    distinct(f_start, gas, SITE, BLOCK, PLOT_ID, chamber, .keep_all = TRUE) |> # we do the distinct on non measured variables only to avoid issues with attributes on other columns
-    arrange(f_start)
-
-str(fluxes_CO2_to_upload) # important to check that the nb of rows matches what it should be
-
-fluxes_CH4_to_upload <- bind_rows(fluxes_CH4, fluxes_CH4_previous) |>
-    distinct(f_start, gas, SITE, BLOCK, PLOT_ID, chamber, .keep_all = TRUE) |> # we do the distinct on non measured variables only to avoid issues with attributes on other columns
-    arrange(f_start)
-
-str(fluxes_CH4_to_upload) # important to check that the nb of rows matches what it should be
 
 
-# now we write the csv files and upload them to OSF
-write_csv(fluxes_CO2_to_upload, "clean_data/fluxes_CO2.csv")
+# # full join with the one that was just produced
+# # we add a distinct as a safety in case this is run several times (no duplicate of data)
 
-write_csv(fluxes_CH4_to_upload, "clean_data/fluxes_CH4.csv")
+# fluxes_CO2_to_upload <- bind_rows(fluxes_CO2, fluxes_CO2_previous) |>
+#     distinct(f_start, gas, SITE, BLOCK, PLOT_ID, chamber, .keep_all = TRUE) |> # we do the distinct on non measured variables only to avoid issues with attributes on other columns
+#     arrange(f_start)
+
+# str(fluxes_CO2_to_upload) # important to check that the nb of rows matches what it should be
+
+# fluxes_CH4_to_upload <- bind_rows(fluxes_CH4, fluxes_CH4_previous) |>
+#     distinct(f_start, gas, SITE, BLOCK, PLOT_ID, chamber, .keep_all = TRUE) |> # we do the distinct on non measured variables only to avoid issues with attributes on other columns
+#     arrange(f_start)
+
+# str(fluxes_CH4_to_upload) # important to check that the nb of rows matches what it should be
+
+
+# # now we write the csv files and upload them to OSF
+# write_csv(fluxes_CO2_to_upload, "clean_data/fluxes_CO2.csv")
+
+# write_csv(fluxes_CH4_to_upload, "clean_data/fluxes_CH4.csv")
