@@ -1,1 +1,19 @@
-TableID,Variable_name,Description,Unit,How measured
+TableID,Variable name,Description,Units,How measured
+,PAR_in_chamber,Mean Photosynthetic Active Radiation measured by the sensor placed inside the transparent chamber. Discarded for dark tube measurements.,µmol s-1sqm-1,measured
+,PAR_out,Mean Photosynthetic Active Radiation measured by the sensor placed on a stick at one of the corners of the plot.,µmol s-1sqm-1,measured
+,T_out,average soil temperature during the measurement,Celsius,measured
+,f_start,datetime of the start of the measurement,yyyy-mm-dd hh:mm:ss,recorded
+,SITE,experimental site,,attributed
+,BLOCK,block withing the experimental site,,attributed
+,PLOT_ID,ID of the plot,,attributed
+,WARMING,warming treatment with open top chambers,,attributed
+,GRUBBING,simulated goose grubbing treatment,,attributed
+,RAIN,simulated rain on snow event treatment,,attributed
+,TYPE,type of measurement,,attributed
+CO2,f_slope_calc,slope of the model that was used to calculated the flux,ppm s-1,modelled
+,temp_air_ave,average air temperature inside the chamber (respectively the dark tube) during the measurement,Celsius,measured
+CO2,flux,flux of CO2 exchanging between the ecosystem and the atmosphere,mmol /m^-2 /hr-1,calculated
+,chamber,chamber used,,attributed
+,gas,gas measured,,attributed
+CH4,f_slope_calc,slope of the model that was used to calculated the flux,ppb s-1,modelled
+CH4,flux,flux of CH4 exchanging between the ecosystem and the atmosphere,µmol /m^-2 /hr-1,calculated
