@@ -8,12 +8,15 @@ fluxes_CH4 <- read_csv("clean_data/fluxes_CH4.csv")
 
 fluxes <- bind_rows(fluxes_CO2, fluxes_CH4)
 
-data_dic_fluxes <- make_data_dictionary(data = fluxes_CO2,
+data_dic_fluxes_co2 <- make_data_dictionary(data = fluxes_CO2,
                                  description_table = description_table,
                                  table_ID = "CO2",
-                                 keep_table_ID = TRUE)
+                                 keep_table_ID = FALSE)
 
 
+data_dic_fluxes_ch4 <- make_data_dictionary(data = fluxes_CH4,
+                                 description_table = description_table,
+                                 table_ID = "CH4",
+                                 keep_table_ID = FALSE)
 
 
-data_dic_fluxes
