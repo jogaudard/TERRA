@@ -7,4 +7,18 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+source("data_dic/fluxes_data_dic.R")
+```
+## Data dictionaries
+
+### CO~2~ fluxes
+
+```{r fluxes_co2}
+knitr::kable(data_dic_fluxes_co2)
+```
+
+### CH~4~ fluxes
+
+```{r fluxes_ch4}
+knitr::kable(data_dic_fluxes_ch4)
 ```
