@@ -157,8 +157,8 @@ slopes_co2_25 <- flux_quality(slopes_co2_25, fit_type = "exp")
 
 slopes_ch4_25 <- flux_quality(slopes_ch4_25, fit_type = "exp", ambient_conc = 2000)
 
-flux_plot(slopes_co2_25, f_plotname = "week25_co2", f_ylim_upper = 600)
-flux_plot(slopes_ch4_25, f_plotname = "week25_ch4", f_ylim_lower = 1995, f_ylim_upper = 2010, y_text_position = 2000)
+flux_plot(slopes_co2_25, f_plotname = "week25_co2", f_ylim_upper = 600, output = "pdfpages")
+flux_plot(slopes_ch4_25, f_plotname = "week25_ch4", f_ylim_lower = 1995, f_ylim_upper = 2010, y_text_position = 2000, output = "pdfpages")
 
 
 # flux_calc to calculate the fluxes
