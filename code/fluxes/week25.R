@@ -147,7 +147,7 @@ conc_ch4_25 <- conc_ch4_25 |>
   )
 # fux_fitting to fit a model to the concentration over time and calculate a slope
 
-slopes_co2_25 <- flux_fitting(conc_co2_25, fit_type = "exp", start_cut = 20)
+slopes_co2_25 <- flux_fitting(conc_co2_25, fit_type = "exp")
 str(slopes_co2_25)
 slopes_ch4_25 <- flux_fitting(conc_ch4_25, fit_type = "exp")
 
@@ -157,8 +157,8 @@ slopes_co2_25 <- flux_quality(slopes_co2_25, fit_type = "exp")
 
 slopes_ch4_25 <- flux_quality(slopes_ch4_25, fit_type = "exp", ambient_conc = 2000)
 
-flux_plot(slopes_co2_25, f_plotname = "week25_co2", f_ylim_upper = 600)
-flux_plot(slopes_ch4_25, f_plotname = "week25_ch4", f_ylim_lower = 1995, f_ylim_upper = 2010, y_text_position = 2000)
+flux_plot(slopes_co2_25, f_plotname = "week25_co2", f_ylim_upper = 600, output = "pdfpages")
+flux_plot(slopes_ch4_25, f_plotname = "week25_ch4", f_ylim_lower = 1995, f_ylim_upper = 2010, y_text_position = 2000, output = "pdfpages")
 
 
 # flux_calc to calculate the fluxes
@@ -268,7 +268,7 @@ fluxes_25  |>
 
 # we create one df per gas and change the unit for CH4
 
-fluxes_CO2 <- fluxes_25 |>
+fluxes_CO2_25 <- fluxes_25 |>
     filter(
         gas == "CO2"
     ) |>
@@ -276,7 +276,7 @@ fluxes_CO2 <- fluxes_25 |>
     select(!f_fluxID) # we remove flux_ID because it will be repeated with the next batch of data
 
 
-fluxes_CH4 <- fluxes_25 |>
+fluxes_CH4_25 <- fluxes_25 |>
     filter(
         gas == "CH4"
     ) |>
