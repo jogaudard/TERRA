@@ -85,13 +85,13 @@ conc_df |>
 
 # use flux_match to match the field record and the concentration data
 
-# we should make two separate files for CO2 and CH4
+# seperate CO2 and CH4 files
 
-# here you need to think if we need to cut the measurements, or if there was a time mismatch at some point
+# here add start and end cuts and correct time mismatch
 
-conc_co2_27 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180)
+conc_co2_27 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180, time_diff = -30)
 
-conc_ch4_27 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180)
+conc_ch4_27 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180, time_diff = -30)
 
 conc_co2_27 <- conc_co2_27 |>
   mutate(
