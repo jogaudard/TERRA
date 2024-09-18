@@ -71,6 +71,11 @@ PAR_temp <- full_join(PAR_temp_1, PAR_temp_2) |>
 
 str(PAR_temp)
 
+#Temp out and chamber are swapped, so swapping headers
+colnames(PAR_temp)[c(4, 5)] <- colnames(PAR_temp)[c(5, 4)]
+
+
+
 fieldnotes <- read_csv("raw_data/week29/Fieldnotes_week_29.csv") |>
   mutate(
     datetime_start = ymd_hms(paste(DATE, START_TIME))
@@ -101,9 +106,9 @@ conc_df |>
 
 # here add start and end cuts and correct time mismatch
 
-conc_co2_29 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180, time_diff = -60)
+conc_co2_29 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180, time_diff = -60, startcrop = 20)
 
-conc_ch4_29 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180, time_diff = -60)
+conc_ch4_29 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180, time_diff = -60, startcrop = 20)
 
 conc_co2_29 <- conc_co2_29 |>
   mutate(
@@ -133,7 +138,7 @@ slopes_co2_29 <- flux_quality(slopes_co2_29, fit_type = "exp")
 slopes_ch4_29 <- flux_quality(slopes_ch4_29, fit_type = "exp", ambient_conc = 2000)
 
 flux_plot(slopes_co2_29, f_plotname = "week29_co2", f_ylim_upper = 600, output = "pdfpages")
-flux_plot(slopes_ch4_29, f_plotname = "week29_ch4", f_ylim_lower = 1995, f_ylim_upper = 2010, y_text_position = 2000, output = "pdfpages")
+flux_plot(slopes_ch4_29, f_plotname = "week29_ch4", f_ylim_lower = 1970, f_ylim_upper = 2010, y_text_position = 2000, output = "pdfpages")
 
 
 # flux_calc to calculate the fluxes
