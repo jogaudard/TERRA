@@ -126,9 +126,9 @@ conc_df |>
 
 # here you need to think if we need to cut the measurements, or if there was a time mismatch at some point
 
-conc_co2_25 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180)
+conc_co2_25 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180, time_diff = -10, startcrop = 20)
 
-conc_ch4_25 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180)
+conc_ch4_25 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180, time_diff = -10, startcrop = 20)
 
 conc_co2_25 <- conc_co2_25 |>
   mutate(
