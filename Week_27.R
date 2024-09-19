@@ -89,9 +89,9 @@ conc_df |>
 
 # here add start and end cuts and correct time mismatch
 
-conc_co2_27 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180, time_diff = -30)
+conc_co2_27 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180, time_diff = -30, startcrop = 20)
 
-conc_ch4_27 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180, time_diff = -30)
+conc_ch4_27 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180, time_diff = -30, startcrop = 20)
 
 conc_co2_27 <- conc_co2_27 |>
   mutate(
@@ -120,8 +120,9 @@ slopes_co2_27 <- flux_quality(slopes_co2_27, fit_type = "exp")
 
 slopes_ch4_27 <- flux_quality(slopes_ch4_27, fit_type = "exp", ambient_conc = 2000)
 
+#Lower ylim ch4 necessary after id 54
 flux_plot(slopes_co2_27, f_plotname = "week27_co2", f_ylim_upper = 600, output = "pdfpages")
-flux_plot(slopes_ch4_27, f_plotname = "week27_ch4", f_ylim_lower = 1995, f_ylim_upper = 2010, y_text_position = 2000, output = "pdfpages")
+flux_plot(slopes_ch4_27, f_plotname = "week27_ch4", f_ylim_lower = 1980, f_ylim_upper = 2010, y_text_position = 2000, output = "pdfpages")
 
 
 # flux_calc to calculate the fluxes
