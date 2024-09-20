@@ -228,12 +228,3 @@ fluxes_CH4_35 <- fluxes_35 |>
   ) |>
   arrange(f_start) |>
   select(!f_fluxID) # we remove flux_ID because it will be repeated with the next batch of data
-
-
-# need to upload to OSF: 1 file for CO2, 1 for CH4, continuous adding (function for that?)
-
-# only for week 25
-
-write_csv(fluxes_CO2, "clean_data/fluxes_CO2.csv")
-
-write_csv(fluxes_CH4, "clean_data/fluxes_CH4.csv")
