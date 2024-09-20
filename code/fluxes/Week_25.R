@@ -8,9 +8,6 @@ library(fluxible)
 
 source("code/fluxes/fun.R")
 
-# download the data from OSF using data dataDownloader
-
-
 # read them, eventually select columns, rename coloumns (depends on the logger settings)
 # use read_delim or read_csv
 # read also the field record with the time of each measurements and the metadata

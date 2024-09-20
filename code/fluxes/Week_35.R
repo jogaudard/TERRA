@@ -7,43 +7,6 @@ library(fluxible)
 
 source("code/fluxes/fun.R")
 
-# download the data from OSF using data dataDownloader
-get_file(node = "rba87",
-         file = "Fieldnotes_week_35.csv",
-         path = "raw_data/week35",
-         remote_path = "raw_data/ecosystem_fluxes/Week_35")
-
-get_file(node = "rba87",
-         file = "CO2_CH4_2024-08-26.data",
-         path = "raw_data/week35",
-         remote_path = "raw_data/ecosystem_fluxes/Week_35")
-
-get_file(node = "rba87",
-         file = "CO2_CH4_2024-08-27.data",
-         path = "raw_data/week35",
-         remote_path = "raw_data/ecosystem_fluxes/Week_35")
-
-get_file(node = "rba87",
-         file = "CO2_CH4_2024-08-28.data",
-         path = "raw_data/week35",
-         remote_path = "raw_data/ecosystem_fluxes/Week_35")
-
-get_file(node = "rba87",
-         file = "PAR_Temp_2024-08-26.dat",
-         path = "raw_data/week35",
-         remote_path = "raw_data/ecosystem_fluxes/Week_35")
-
-get_file(node = "rba87",
-         file = "PAR_Temp_2024-08-27.dat",
-         path = "raw_data/week35",
-         remote_path = "raw_data/ecosystem_fluxes/Week_35")
-
-get_file(node = "rba87",
-         file = "PAR_Temp_2024-08-28.dat",
-         path = "raw_data/week35",
-         remote_path = "raw_data/ecosystem_fluxes/Week_35")
-
-
 # read them, eventually select columns, rename coloumns (depends on the logger settings) using function 
 # use read_delim or read_csv
 # read also the field record with the time of each measurements and the metadata
