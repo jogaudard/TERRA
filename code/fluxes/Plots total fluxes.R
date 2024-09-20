@@ -9,12 +9,22 @@ fluxes_CH4_all <- full_join(fluxes_CH4_25, fluxes_CH4_27) |>
   full_join(fluxes_CH4_33) |>
   full_join(fluxes_CH4_35)
 
+#export this df to csv
+write.csv(fluxes_CH4_all, "clean_data/fluxes_CH4.csv")
+
 #same for CO2 fluxes
 fluxes_CO2_all <- full_join(fluxes_CO2_25, fluxes_CO2_27) |>
   full_join(fluxes_CO2_29) |>
   full_join(fluxes_CO2_31) |>
   full_join(fluxes_CO2_33) |>
   full_join(fluxes_CO2_35)
+
+#export this df to csv
+write.csv(fluxes_CO2_all, "clean_data/fluxes_CO2.csv")
+
+##START IF NO CHANGES HAVE BEEN MADE TO DATA PROCESSING 
+fluxes_CH4_all <- read.csv("clean_data/fluxes_CH4.csv")
+fluxes_CO2_all <- read.csv("clean_data/fluxes_CO2.csv")
 
 #Note, output of fluxes is mmol/m2/h for CO2 and µmol/m2/h for CH4
 #Time to make some plots
