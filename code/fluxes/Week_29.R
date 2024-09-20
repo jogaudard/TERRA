@@ -52,14 +52,6 @@ conc_df <- left_join(CO2_CH4, PAR_temp)
 
 str(conc_df)
 
-# just some graph to check that the data are complete
-
-conc_df |>
-  pivot_longer(cols = c(CH4, CO2, PAR_in_chamber, PAR_out, T_in_chamber, T_out), names_to = "measurement") |>
-  ggplot(aes(datetime, value)) +
-  geom_point() +
-  facet_grid(measurement~., scales = "free") +
-  scale_x_datetime(date_breaks = "5 hour", minor_breaks = "1 hour")
 
 # use fluxible to calculate fluxes
 
@@ -228,12 +220,3 @@ fluxes_CH4_29 <- fluxes_29 |>
   ) |>
   arrange(f_start) |>
   select(!f_fluxID) # we remove flux_ID because it will be repeated with the next batch of data
-
-
-# need to upload to OSF: 1 file for CO2, 1 for CH4, continuous adding (function for that?)
-
-# only for week 25
-
-write_csv(fluxes_CO2, "clean_data/fluxes_CO2.csv")
-
-write_csv(fluxes_CH4, "clean_data/fluxes_CH4.csv")
