@@ -63,7 +63,7 @@ CO2_fluxes_plot <- ggplot(filtered_fluxes_CO2_all,
                             colour = SITE
                           )) +
   geom_sina() +
-  labs(y = 'CO2 flux (mmol/m2/s)') +
+  labs(y = 'CO2 flux (mmol/m2/h)') +
   facet_grid(rows = vars(TYPE), cols = vars(PLOT_ID))
 
 print(CO2_fluxes_plot)
@@ -126,6 +126,6 @@ CO2_fluxes_over_time <- ggplot(fluxes_CO2_all_wk,
     show.legend = FALSE
   ) +
   facet_grid(rows = vars(TYPE), cols = vars(PLOT_ID)) +
-  labs(y = 'CH4 flux (mmol/m2/s)', 
+  labs(y = 'CH4 flux (mmol/m2/h)', 
        x = 'Week number')
 plot(CO2_fluxes_over_time)
