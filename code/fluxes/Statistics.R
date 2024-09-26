@@ -107,47 +107,4 @@ for (i in 1:nrow(unique_combinations)) {
 print(ttest_results_CO2)
 
 
-# Load necessary library
-library(dplyr)
 
-# Ensure the flux column is numeric
-filtered_fluxes_CH4_all$flux <- as.numeric(filtered_fluxes_CH4_all$flux)
-
-# Initialize an empty data frame to store comparison results
-comparison_results <- data.frame()
-
-# Unique combinations of TYPE and PLOT_ID
-unique_combinations <- filtered_fluxes_CH4_all %>% 
-  select(TYPE, PLOT_ID) %>% 
-  distinct()
-
-# Loop through each unique combination of TYPE and PLOT_ID
-for (i in 1:nrow(unique_combinations)) {
-  
-  # Filter data for the current TYPE and PLOT_ID
-  subset_data <- filtered_fluxes_CH4_all %>% 
-    filter(TYPE == unique_combinations$TYPE[i], PLOT_ID == unique_combinations$PLOT_ID[i])
-  
-  # Extract flux data for dryas and moss
-  dryas_flux <- subset_data %>% filter(SITE == "dryas") %>% select(flux) %>% unlist()
-  moss_flux <- subset_data %>% filter(SITE == "moss") %>% select(flux) %>% unlist()
-  
-  # Check if both sites have data
-  if (length(dryas_flux) > 0 && length(moss_flux) > 0) {
-    # Perform the t-test
-    t_test <- t.test(dryas_flux, moss_flux)
-    
-    # Store results in the dataframe
-    comparison_results <- rbind(comparison_results, data.frame(
-      TYPE = unique_combinations$TYPE[i],
-      PLOT_ID = unique_combinations$PLOT_ID[i],
-      t_statistic = t_test$statistic,
-      p_value = t_test$p.value,
-      mean_dryas = mean(dryas_flux),
-      mean_moss = mean(moss_flux)
-    ))
-  }
-}
-
-# View the results
-print(comparison_results)
