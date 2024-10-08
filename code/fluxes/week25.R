@@ -8,60 +8,11 @@ library(fluxible)
 
 source("code/fluxes/fun.R")
 
-# download the data from OSF using data dataDownloader
-get_file(node = "rba87",
-         file = "Fieldnotes.csv",
-         path = "raw_data",
-         remote_path = "raw_data/ecosystem_fluxes/Week_25")
-
-get_file(node = "rba87",
-         file = "CO2_CH4_2024-06-17.data",
-         path = "raw_data/week25",
-         remote_path = "raw_data/ecosystem_fluxes/Week_25")
-
-get_file(node = "rba87",
-         file = "CO2_CH4_2024-06-18.data",
-         path = "raw_data/week25",
-         remote_path = "raw_data/ecosystem_fluxes/Week_25")
-get_file(node = "rba87",
-         file = "CO2_CH4_2024-06-19.data",
-         path = "raw_data/week25",
-         remote_path = "raw_data/ecosystem_fluxes/Week_25")
-
-get_file(node = "rba87",
-         file = "PAR_Temp_2024-06-17.dat",
-         path = "raw_data/week25",
-         remote_path = "raw_data/ecosystem_fluxes/Week_25")
-
-get_file(node = "rba87",
-         file = "PAR_Temp_2024-06-18.dat",
-         path = "raw_data/week25",
-         remote_path = "raw_data/ecosystem_fluxes/Week_25")
-
-get_file(node = "rba87",
-         file = "PAR_Temp_2024-06-19.dat",
-         path = "raw_data/week25",
-         remote_path = "raw_data/ecosystem_fluxes/Week_25")
-
 # read them, eventually select columns, rename coloumns (depends on the logger settings)
 # use read_delim or read_csv
 # read also the field record with the time of each measurements and the metadata
 
-CO2_CH4_1 <- read_delim("raw_data/week25/CO2_CH4_2024-06-17.data", delim = "\t", skip = 5) |>
-  filter(DATAH != "DATAU") |> #removing the line with the units
-  mutate(
-    DATE = ymd(DATE),
-    TIME = hms(TIME),
-    CO2 = as.double(CO2),
-    CH4 = as.double(CH4),
-    datetime = ymd_hms(paste(DATE, TIME))
-  ) |>
-  select(datetime, CH4, CO2) # I am removing the remark column. Since it was not always sync with the measurement it is annoying in the rest
-
-head(CO2_CH4_1)
-
-# I wrote a function for that, no way I am copy pasting those lines everytime
-
+CO2_CH4_1 <- import_CO2_CH4("raw_data/week25/CO2_CH4_2024-06-17.data")
 CO2_CH4_2 <- import_CO2_CH4("raw_data/week25/CO2_CH4_2024-06-18.data")
 CO2_CH4_3 <- import_CO2_CH4("raw_data/week25/CO2_CH4_2024-06-19.data")
 
@@ -74,16 +25,7 @@ str(CO2_CH4) # just checking
 
 # now we need to import the data from the PAR_temp logger
 
-PAR_temp_1 <- read_delim("raw_data/week25/PAR_Temp_2024-06-17.dat", delim = ",", skip = 1) |>
-  rename(
-    datetime = TMSTAMP
-  ) |>
-  select(datetime, PAR_in_chamber, PAR_out, T_in_chamber, T_out)
-
-head(PAR_temp_1)
-
-# again, a function
-
+PAR_temp_1 <- import_PAR_temp("raw_data/week25/PAR_Temp_2024-06-17.dat")
 PAR_temp_2 <- import_PAR_temp("raw_data/week25/PAR_Temp_2024-06-18.dat")
 PAR_temp_3 <- import_PAR_temp("raw_data/week25/PAR_Temp_2024-06-19.dat")
 
@@ -126,9 +68,9 @@ conc_df |>
 
 # here you need to think if we need to cut the measurements, or if there was a time mismatch at some point
 
-conc_co2_25 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180)
+conc_co2_25 <- flux_match(conc_df, fieldnotes, conc_col = "CO2", start_col = "datetime_start", measurement_length = 180, time_diff = -10, startcrop = 20)
 
-conc_ch4_25 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180)
+conc_ch4_25 <- flux_match(conc_df, fieldnotes, conc_col = "CH4", start_col = "datetime_start", measurement_length = 180, time_diff = -10, startcrop = 20)
 
 conc_co2_25 <- conc_co2_25 |>
   mutate(
@@ -147,7 +89,7 @@ conc_ch4_25 <- conc_ch4_25 |>
   )
 # fux_fitting to fit a model to the concentration over time and calculate a slope
 
-slopes_co2_25 <- flux_fitting(conc_co2_25, fit_type = "exp", start_cut = 20)
+slopes_co2_25 <- flux_fitting(conc_co2_25, fit_type = "exp")
 str(slopes_co2_25)
 slopes_ch4_25 <- flux_fitting(conc_ch4_25, fit_type = "exp")
 
@@ -268,7 +210,7 @@ fluxes_25  |>
 
 # we create one df per gas and change the unit for CH4
 
-fluxes_CO2 <- fluxes_25 |>
+fluxes_CO2_25 <- fluxes_25 |>
     filter(
         gas == "CO2"
     ) |>
@@ -276,7 +218,7 @@ fluxes_CO2 <- fluxes_25 |>
     select(!f_fluxID) # we remove flux_ID because it will be repeated with the next batch of data
 
 
-fluxes_CH4 <- fluxes_25 |>
+fluxes_CH4_25 <- fluxes_25 |>
     filter(
         gas == "CH4"
     ) |>
